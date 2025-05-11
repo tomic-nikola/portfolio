@@ -1,43 +1,4 @@
-<script type="text/javascript">
-        var gk_isXlsx = false;
-        var gk_xlsxFileLookup = {};
-        var gk_fileData = {};
-        function filledCell(cell) {
-          return cell !== '' && cell != null;
-        }
-        function loadFileData(filename) {
-        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
-            try {
-                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
-                var firstSheetName = workbook.SheetNames[0];
-                var worksheet = workbook.Sheets[firstSheetName];
-
-                // Convert sheet to JSON to filter blank rows
-                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
-                // Filter out blank rows (rows where all cells are empty, null, or undefined)
-                var filteredData = jsonData.filter(row => row.some(filledCell));
-
-                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
-                var headerRowIndex = filteredData.findIndex((row, index) =>
-                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
-                );
-                // Fallback
-                if (headerRowIndex === -1 || headerRowIndex > 25) {
-                  headerRowIndex = 0;
-                }
-
-                // Convert filtered JSON back to CSV
-                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
-                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
-                return csv;
-            } catch (e) {
-                console.error(e);
-                return "";
-            }
-        }
-        return gk_fileData[filename] || "";
-        }
-        </script><!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -259,9 +220,18 @@
             text-align: right;
         }
 
-        #email a {
+        #email a, #phone a {
             text-decoration: none;
             color: inherit;
+            transition: color 0.3s ease;
+        }
+
+        #email a:hover, #phone a:hover {
+            color: #007bff;
+        }
+
+        body.dark #email a:hover, body.dark #phone a:hover {
+            color: #1e90ff; /* Slightly lighter blue for dark mode visibility */
         }
 
         h1 {
@@ -424,7 +394,7 @@
             <div class="category" data-target="contact-details">Contact</div>
             <div id="contact-details" class="subcategories">
                 <p id="email">Email: <a href="mailto:nklatm@gmail.com">nklatm@gmail.com</a></p>
-                <p id="phone">Phone: +381-66-030-646</p>
+                <p id="phone">Phone: <a href="tel:+38166030646">+381-66-030-646</a></p>
             </div>
         </section>
     </main>
@@ -452,7 +422,7 @@
                 individualTitle2.textContent = 'Индивидуални радови';
                 contactTitle.textContent = 'Контакт';
                 email.innerHTML = 'Е-пошта: <a href="mailto:nklatm@gmail.com">nklatm@gmail.com</a>';
-                phone.textContent = 'Телефон: +381-66-030-646';
+                phone.innerHTML = 'Телефон: <a href="tel:+38166030646">+381-66-030-646</a>';
                 subs1[0].textContent = 'Пројектовање отворених простора';
                 subs1[1].textContent = 'Распоред биљака';
                 subs1[2].textContent = 'Реконструкција паркова и травњака';
@@ -466,7 +436,7 @@
                 individualTitle2.textContent = 'Individual Work';
                 contactTitle.textContent = 'Contact';
                 email.innerHTML = 'Email: <a href="mailto:nklatm@gmail.com">nklatm@gmail.com</a>';
-                phone.textContent = 'Phone: +381-66-030-646';
+                phone.innerHTML = 'Phone: <a href="tel:+38166030646">+381-66-030-646</a>';
                 subs1[0].textContent = 'Outdoor Spaces Design';
                 subs1[1].textContent = 'Plant Arrangement';
                 subs1[2].textContent = 'Park & Lawn Reconstruction';
@@ -480,7 +450,7 @@
                 individualTitle2.textContent = 'Travaux individuels';
                 contactTitle.textContent = 'Contact';
                 email.innerHTML = 'Email: <a href="mailto:nklatm@gmail.com">nklatm@gmail.com</a>';
-                phone.textContent = 'Téléphone: +381-66-03-06-46';
+                phone.innerHTML = 'Téléphone: <a href="tel:+38166030646">+381-66-03-06-46</a>';
                 subs1[0].textContent = 'Conception d’espaces extérieurs';
                 subs1[1].textContent = 'Arrangement des plantes';
                 subs1[2].textContent = 'Reconstruction de parcs et pelouses';
@@ -579,7 +549,7 @@
             "Park & Lawn Reconstruction": [
                 { title: { en: "Lawn (2024)", sr: "Травњак (2024)", fr: "Pelouse (2024)" }, img: "https://i.imgur.com/UAKiQo5.png", link: { en: "https://drive.google.com/file/d/14x8LpUY9H8nkI2g-cVbkr2dXbxhOQxYI/view?usp=drive_link", sr: "https://drive.google.com/file/d/1KBI3rHx_DndVqZishAButVRqoGg4I-ZQ/view?usp=drive_link", fr: "https://drive.google.com/file/d/19ldspEWgm4p7zMnSlwh45df3KHbIkLBd/view?usp=drive_link" } },
                 { title: { en: "Local Park (2024)", sr: "Локални парк (2024)", fr: "Parc local (2024)" }, img: "https://i.imgur.com/1poDGcN.jpeg", link: { en: "https://drive.google.com/file/d/1XmurqSfQpf_02y8jer2tE92uf1TZwD8I/view?usp=drive_link", sr: "https://drive.google.com/file/d/1LW682nfocSSdgkTJUkuvFDO__HkmedHZ/view?usp=drive_link", fr: "https://drive.google.com/file/d/1YxZ8ol3Uc1yX-EKqBKKB7_uH6xwcbF7G/view?usp=drive_link" } },
-                { title: { en: "City Park (2024)", sr: "Градски парк (2024)", fr: "Parc urbain (2024)" }, img: "https://i.imgur.com/aZop2vA.png", link: { en: "https://drive.google.com/file/d/1wWktjcqL3c_jGDFPD_zRTdAGqKcuF9SR/view?usp=drive_link", sr: "https://drive.google.com/file/d/1-emv_2naMEIfXuQO5 zevenukgVQoXqFAXK/view?usp=drive_link", fr: "https://drive.google.com/file/d/1KmNnfz8baSHfAWxdvoth1_-eB-k6GqkW/view?usp=drive_link" } },
+                { title: { en: "City Park (2024)", sr: "Градски парк (2024)", fr: "Parc urbain (2024)" }, img: "https://i.imgur.com/aZop2vA.png", link: { en: "https://drive.google.com/file/d/1wWktjcqL3c_jGDFPD_zRTdAGqKcuF9SR/view?usp=drive_link", sr: "https://drive.google.com/file/d/1-emv_2naMEIfXuQO5e78ukgVQoXqFAXK/view?usp=drive_link", fr: "https://drive.google.com/file/d/1KmNnfz8baSHfAWxdvoth1_-eB-k6GqkW/view?usp=drive_link" } },
                 { title: { en: "Eco Park (2019)", sr: "Еколошки парк (2019)", fr: "Parc écologique (2019)" }, img: "https://i.imgur.com/EeIU78k.png", link: { en: "https://drive.google.com/file/d/14Ilx6XkcFOF7xisfgnA23uT58Eg-lhAx/view?usp=drive_link", sr: "https://drive.google.com/file/d/1GSdj-MUFwiZURj6rWwEIHpj5TdeQdWcc/view?usp=drive_link", fr: "https://drive.google.com/file/d/1bfgpDHbVUa8voHio1PyGZGBG6p8l_ru4/view?usp=drive_link" } }
             ],
             "Research Papers": [
