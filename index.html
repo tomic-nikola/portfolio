@@ -1,4 +1,43 @@
-<!DOCTYPE html>
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -79,11 +118,16 @@
 
         #theme-toggle .symbol {
             display: inline-block;
-            transition: transform 0.2s ease;
+            transition: transform 0.6s ease;
+        }
+
+        #theme-toggle:hover .symbol {
+            animation: spin 0.6s ease-in-out forwards;
         }
 
         #theme-toggle:active .symbol {
             transform: rotate(90deg) scale(0.95);
+            transition: transform 0.2s ease;
         }
 
         body.dark button, body.dark select {
@@ -270,6 +314,11 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
         @media (max-width: 768px) {
             body { 
                 padding: 15px 15px 60px 15px;
@@ -289,7 +338,7 @@
             }
             nav { 
                 gap: 10px; 
-                padding-right: 0px; /* Pomeranje skroz uz desnu ivicu */
+                padding-right: 0px;
             }
             button, select { 
                 padding: 6px; 
@@ -385,7 +434,7 @@
     </footer>
 
     <script>
-        // Funkcija za ažuriranje jezika i теме
+        // Funkcija za ažuriranje jezika i teme
         function updateLanguageAndTheme(lang, isDark) {
             const individualTitle = document.querySelector('[data-target="individual-works"]');
             const individualTitle2 = document.querySelector('[data-target="individual-works-2"]');
@@ -493,8 +542,8 @@
                         content.classList.remove('active');
                         activeSubcategory = null;
                         if (window.innerWidth <= 768) {
-                            document.body.style.height = '100vh'; // Vraća na početnu visinu
-                            window.scrollTo(0, 0); // Resetuje skrol na vrh
+                            document.body.style.height = '100vh';
+                            window.scrollTo(0, 0);
                         }
                     }
                 } else {
@@ -530,7 +579,7 @@
             "Park & Lawn Reconstruction": [
                 { title: { en: "Lawn (2024)", sr: "Травњак (2024)", fr: "Pelouse (2024)" }, img: "https://i.imgur.com/UAKiQo5.png", link: { en: "https://drive.google.com/file/d/14x8LpUY9H8nkI2g-cVbkr2dXbxhOQxYI/view?usp=drive_link", sr: "https://drive.google.com/file/d/1KBI3rHx_DndVqZishAButVRqoGg4I-ZQ/view?usp=drive_link", fr: "https://drive.google.com/file/d/19ldspEWgm4p7zMnSlwh45df3KHbIkLBd/view?usp=drive_link" } },
                 { title: { en: "Local Park (2024)", sr: "Локални парк (2024)", fr: "Parc local (2024)" }, img: "https://i.imgur.com/1poDGcN.jpeg", link: { en: "https://drive.google.com/file/d/1XmurqSfQpf_02y8jer2tE92uf1TZwD8I/view?usp=drive_link", sr: "https://drive.google.com/file/d/1LW682nfocSSdgkTJUkuvFDO__HkmedHZ/view?usp=drive_link", fr: "https://drive.google.com/file/d/1YxZ8ol3Uc1yX-EKqBKKB7_uH6xwcbF7G/view?usp=drive_link" } },
-                { title: { en: "City Park (2024)", sr: "Градски парк (2024)", fr: "Parc urbain (2024)" }, img: "https://i.imgur.com/aZop2vA.png", link: { en: "https://drive.google.com/file/d/1wWktjcqL3c_jGDFPD_zRTdAGqKcuF9SR/view?usp=drive_link", sr: "https://drive.google.com/file/d/1-emv_2naMEIfXuQO5e78ukgVQoXqFAXK/view?usp=drive_link", fr: "https://drive.google.com/file/d/1KmNnfz8baSHfAWxdvoth1_-eB-k6GqkW/view?usp=drive_link" } },
+                { title: { en: "City Park (2024)", sr: "Градски парк (2024)", fr: "Parc urbain (2024)" }, img: "https://i.imgur.com/aZop2vA.png", link: { en: "https://drive.google.com/file/d/1wWktjcqL3c_jGDFPD_zRTdAGqKcuF9SR/view?usp=drive_link", sr: "https://drive.google.com/file/d/1-emv_2naMEIfXuQO5 zevenukgVQoXqFAXK/view?usp=drive_link", fr: "https://drive.google.com/file/d/1KmNnfz8baSHfAWxdvoth1_-eB-k6GqkW/view?usp=drive_link" } },
                 { title: { en: "Eco Park (2019)", sr: "Еколошки парк (2019)", fr: "Parc écologique (2019)" }, img: "https://i.imgur.com/EeIU78k.png", link: { en: "https://drive.google.com/file/d/14Ilx6XkcFOF7xisfgnA23uT58Eg-lhAx/view?usp=drive_link", sr: "https://drive.google.com/file/d/1GSdj-MUFwiZURj6rWwEIHpj5TdeQdWcc/view?usp=drive_link", fr: "https://drive.google.com/file/d/1bfgpDHbVUa8voHio1PyGZGBG6p8l_ru4/view?usp=drive_link" } }
             ],
             "Research Papers": [
