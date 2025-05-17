@@ -124,6 +124,14 @@
             color: #fff;
         }
 
+        #language-toggle span {
+            color: #000;
+        }
+
+        body.dark #language-toggle span {
+            color: #fff;
+        }
+
         #language-toggle::after {
             content: '';
             position: absolute;
@@ -268,18 +276,29 @@
             text-align: center;
             opacity: 0;
             animation: fadeInItem 0.5s ease-out forwards;
-        }
-
-        .grid-item a {
-            display: block;
-            text-decoration: none;
-            color: inherit;
+            cursor: pointer;
             transition: transform 0.3s ease, opacity 0.3s ease;
         }
 
-        .grid-item a:hover {
+        .grid-item:hover {
             transform: scale(1.04);
             opacity: 0.9;
+        }
+
+        .grid-item:active {
+            transform: scale(1.04);
+            opacity: 0.9;
+        }
+
+        .grid-item div {
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+        }
+
+        .grid-item:hover div {
+            transform: scale(1.05);
+        }
+
+        body.dark .grid-item:hover div {
         }
 
         .grid img {
@@ -337,6 +356,128 @@
             color: #8e8e93;
         }
 
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal.active {
+            display: flex;
+            animation: fadeInModal 0.3s ease-out;
+        }
+
+        .modal.closing {
+            animation: fadeOutModal 0.3s ease-in forwards;
+        }
+
+        .modal-content {
+            background: #fff;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 800px;
+            height: 80vh;
+            max-height: 90vh;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .modal-content.active {
+            animation: scaleInModal 0.3s ease-out;
+        }
+
+        .modal-content.closing {
+            animation: scaleOutModal 0.3s ease-in forwards;
+        }
+
+        body.dark .modal-content {
+            background: #1c1c1e;
+        }
+
+        .modal-header {
+            background: #f5f5f5;
+            padding: 10px 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            position: relative;
+            z-index: 10;
+        }
+
+        body.dark .modal-header {
+            background: #2c2c2e;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .modal-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #000;
+            text-align: center;
+            margin: 0;
+            flex-grow: 0;
+        }
+
+        body.dark .modal-title {
+            color: #fff;
+        }
+
+        .modal-content iframe {
+            width: 100%;
+            height: calc(100% - 50px); /* Adjust for header height */
+            border: none;
+            border-radius: 0 0 10px 10px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(0, 0, 0, 0.1);
+            border: none;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            font-size: 16px;
+            color: #000;
+            transition: background 0.2s ease, transform 0.2s ease;
+            z-index: 10;
+        }
+
+        body.dark .modal-close {
+            background: rgba(255, 255, 255, 0.2);
+            color: #fff;
+        }
+
+        .modal-close:hover {
+            background: rgba(0, 0, 0, 0.2);
+            transform: scale(1.1);
+        }
+
+        body.dark .modal-close:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .modal-close:active {
+            transform: scale(0.9);
+        }
+
         @keyframes slideIn {
             from { opacity: 0; transform: translateY(8px); }
             to { opacity: 1; transform: translateY(0); }
@@ -360,6 +501,26 @@
         @keyframes fadeInMobile {
             from { opacity: 0; transform: translateY(12px); }
             to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInModal {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes fadeOutModal {
+            from { opacity: 1; }
+            to { opacity: 0; }
+        }
+
+        @keyframes scaleInModal {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        @keyframes scaleOutModal {
+            from { opacity: 1; transform: scale(1); }
+            to { opacity: 0; transform: scale(0.95); }
         }
 
         @media (max-width: 768px) {
@@ -411,8 +572,8 @@
             #content { position: relative; top: auto; left: auto; transform: none; width: 100%; margin: 20px 0; }
             #content.active { animation: fadeInMobile 0.5s ease-out; }
             .grid { gap: 15px; max-width: 100%; padding: 0 10px; }
-            .grid-item { width: 45%; max-width: 200px; }
-            .grid img { height: 120px; }
+            .grid-item { width: 45%; }
+            .grid img { height: 150px; }
             .grid-item p { font-size: 12px; }
             #contact { 
                 position: fixed; 
@@ -428,13 +589,24 @@
             #contact .subcategories { margin-left: 0; }
             h1 { font-size: 20px; }
             footer { padding: 8px; }
+            .modal-content {
+                width: 95%;
+                height: 85vh;
+            }
+            .modal-title {
+                font-size: 16px;
+            }
         }
 
         @media (max-width: 480px) {
-            .grid-item { width: 100%; max-width: 300px; }
+            .grid-item { width: 100%; }
             .grid img { height: 150px; }
             #contact { bottom: 26px; right: 10px; padding: 8px; }
             footer { padding: 6px; }
+            .modal-content {
+                width: 98%;
+                height: 90vh;
+            }
         }
     </style>
 </head>
@@ -483,6 +655,16 @@
             </div>
         </section>
     </main>
+
+    <div class="modal" id="pdf-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title" id="modal-title"></span>
+                <button class="modal-close">✕</button>
+            </div>
+            <iframe id="pdf-viewer" src="" frameborder="0"></iframe>
+        </div>
+    </div>
 
     <footer>
         <p>Copyright © 2025 Nikola Tomić. All rights reserved.</p>
@@ -644,43 +826,76 @@
             });
         });
 
-        // Prikazivanje sadržaja za podkategorije са hyperlinkovima i animacijама
+        // Modal functionality
+        const modal = document.getElementById('pdf-modal');
+        const pdfViewer = document.getElementById('pdf-viewer');
+        const modalClose = document.querySelector('.modal-close');
+        const modalTitle = document.getElementById('modal-title');
+        const modalContent = document.querySelector('.modal-content');
+
+        function openModal(pdfUrl, title) {
+            pdfViewer.src = pdfUrl;
+            modalTitle.textContent = title;
+            modal.classList.add('active');
+            modalContent.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            modal.classList.add('closing');
+            modalContent.classList.add('closing');
+            setTimeout(() => {
+                modal.classList.remove('active', 'closing');
+                modalContent.classList.remove('active', 'closing');
+                pdfViewer.src = '';
+                modalTitle.textContent = '';
+                document.body.style.overflow = '';
+            }, 300); // Match animation duration
+        }
+
+        modalClose.addEventListener('click', closeModal);
+
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) closeModal();
+        });
+
+        // Prikazivanje sadržaja za podkategorije sa modalom
         const subcategories = document.querySelectorAll('.subcategory');
         const contentTitle = document.getElementById('content-title');
         const contentGrid = document.getElementById('content-grid');
 
         const subcategoryContent = {
             "Outdoor Spaces Design": [
-                { title: { en: "Rooftop Garden (2023)", sr: "Кровни врт (2023)", fr: "Jardin sur le toit (2023)" }, img: "https://i.imgur.com/OWFKlV9.jpeg", link: { en: "https://drive.google.com/file/d/1_VW808zgMHmj83EvNEJcJw3CWdWWTs52/view?usp=drive_link", sr: "https://drive.google.com/file/d/1gKrVhT6loR9q6Vr7AffcRVXAeFW0fgFY/view?usp=drive_link", fr: "https://drive.google.com/file/d/19w-6CXj7s6iYPd6ML5sfnDaaggLjIfvP/view?usp=sharing" } },
-                { title: { en: "City Square & Pedestrian Zone (2022)", sr: "Градски трг и пешачка зона (2022)", fr: "Place de la ville et zone piétonne (2022)" }, img: "https://i.imgur.com/rsERjlR.jpeg", link: { en: "https://drive.google.com/file/d/1kRyTtuCnSri8Ai_VtdpbbtdEGlkEytW7/view?usp=drive_link", sr: "https://drive.google.com/file/d/1AwQ61VABDHKLeXrY5s1r4WkCrpSshjwZ/view?usp=drive_link", fr: "https://drive.google.com/file/d/1BGcD_b_oJxjpMlOEp4Q-tBdm3jEBQLE-/view?usp=drive_link" } },
-                { title: { en: "Local Park (2021)", sr: "Локални парк (2021)", fr: "Parc local (2021)" }, img: "https://i.imgur.com/Cnb7YgY.jpeg", link: { en: "https://drive.google.com/file/d/1BNs01tPrQ2kEX3vGizv7sNCmx7j_xkMA/view?usp=drive_link", sr: "https://drive.google.com/file/d/1Ai-uoXQdZdKkNyAGnFzQKwdmjeYXThFT/view?usp=drive_link", fr: "https://drive.google.com/file/d/1YFDCWHT1xZhMbWizdrtD9pRLz2NLg5p-/view?usp=drive_link" } },
-                { title: { en: "Residential Block (2021)", sr: "Стамбени блок (2021)", fr: "Bloc résidentiel (2021)" }, img: "https://i.imgur.com/PvpR07c.jpeg", link: { en: "https://drive.google.com/file/d/1aA6M2wGj9zs5jPaPWStzTuHSHdxEByXV/view?usp=drive_link", sr: "https://drive.google.com/file/d/1s3M2ddOe_Q_sInpaVHfe4ncp9g7WC-DY/view?usp=drive_link", fr: "https://drive.google.com/file/d/16JpN-JGobw4xCj_e5UioNqDXERbDDxwB/view?usp=drive_link" } },
-                { title: { en: "Atrium (2020)", sr: "Атријум (2020)", fr: "Atrium (2020)" }, img: "https://i.imgur.com/V08VX0t.jpeg", link: { en: "https://drive.google.com/file/d/1DKlbZmS8ZjTAAzBlWVxW-wSJjy9tuvih/view?usp=drive_link", sr: "https://drive.google.com/file/d/11W0pmsYvYe9Yz-wfI_xpb3DnTAwpxI14/view?usp=drive_link", fr: "https://drive.google.com/file/d/1DYLByXPsD5iWpTbLT_1a7TwvmR4SytzJ/view?usp=drive_link" } },
-                { title: { en: "City Plateau and Basic Elements (2019)", sr: "Градски плато и основни елементи (2019)", fr: "Plateau de la ville et éléments de base (2019)" }, img: "https://i.imgur.com/FqzSrt0.jpeg", link: { en: "https://drive.google.com/file/d/1ReDQeY0v5JucFPYoPRsBj3F1P9fKkw0H/view?usp=drive_link", sr: "https://drive.google.com/file/d/1aAL0gBzlmK93Nh3DcOo2d3St_pEdLn-0/view?usp=drive_link", fr: "https://drive.google.com/file/d/1Ttj3ezDLlzJxVrQE0Ga5TMRot_mHtBUP/view?usp=drive_link" } }
+                { title: { en: "Rooftop Garden (2023)", sr: "Кровни врт (2023)", fr: "Jardin sur le toit (2023)" }, img: "https://i.imgur.com/OWFKlV9.jpeg", link: { en: "https://drive.google.com/file/d/1_VW808zgMHmj83EvNEJcJw3CWdWWTs52/preview", sr: "https://drive.google.com/file/d/1gKrVhT6loR9q6Vr7AffcRVXAeFW0fgFY/preview", fr: "https://drive.google.com/file/d/19w-6CXj7s6iYPd6ML5sfnDaaggLjIfvP/preview" } },
+                { title: { en: "City Square & Pedestrian Zone (2022)", sr: "Градски трг и пешачка зона (2022)", fr: "Place de la ville et zone piétonne (2022)" }, img: "https://i.imgur.com/rsERjlR.jpeg", link: { en: "https://drive.google.com/file/d/1kRyTtuCnSri8Ai_VtdpbbtdEGlkEytW7/preview", sr: "https://drive.google.com/file/d/1AwQ61VABDHKLeXrY5s1r4WkCrpSshjwZ/preview", fr: "https://drive.google.com/file/d/1BGcD_b_oJxjpMlOEp4Q-tBdm3jEBQLE-/preview" } },
+                { title: { en: "Local Park (2021)", sr: "Локални парк (2021)", fr: "Parc local (2021)" }, img: "https://i.imgur.com/Cnb7YgY.jpeg", link: { en: "https://drive.google.com/file/d/1BNs01tPrQ2kEX3vGizv7sNCmx7j_xkMA/preview", sr: "https://drive.google.com/file/d/1Ai-uoXQdZdKkNyAGnFzQKwdmjeYXThFT/preview", fr: "https://drive.google.com/file/d/1YFDCWHT1xZhMbWizdrtD9pRLz2NLg5p-/preview" } },
+                { title: { en: "Residential Block (2021)", sr: "Стамбени блок (2021)", fr: "Bloc résidentiel (2021)" }, img: "https://i.imgur.com/PvpR07c.jpeg", link: { en: "https://drive.google.com/file/d/1aA6M2wGj9zs5jPaPWStzTuHSHdxEByXV/preview", sr: "https://drive.google.com/file/d/1s3M2ddOe_Q_sInpaVHfe4ncp9g7WC-DY/preview", fr: "https://drive.google.com/file/d/16JpN-JGobw4xCj_e5UioNqDXERbDDxwB/preview" } },
+                { title: { en: "Atrium (2020)", sr: "Атријум (2020)", fr: "Atrium (2020)" }, img: "https://i.imgur.com/V08VX0t.jpeg", link: { en: "https://drive.google.com/file/d/1DKlbZmS8ZjTAAzBlWVxW-wSJjy9tuvih/preview", sr: "https://drive.google.com/file/d/11W0pmsYvYe9Yz-wfI_xpb3DnTAwpxI14/preview", fr: "https://drive.google.com/file/d/1DYLByXPsD5iWpTbLT_1a7TwvmR4SytzJ/preview" } },
+                { title: { en: "City Plateau and Basic Elements (2019)", sr: "Градски плато и основни елементи (2019)", fr: "Plateau de la ville et éléments de base (2019)" }, img: "https://i.imgur.com/FqzSrt0.jpeg", link: { en: "https://drive.google.com/file/d/1ReDQeY0v5JucFPYoPRsBj3F1P9fKkw0H/preview", sr: "https://drive.google.com/file/d/1aAL0gBzlmK93Nh3DcOo2d3St_pEdLn-0/preview", fr: "https://drive.google.com/file/d/1Ttj3ezDLlzJxVrQE0Ga5TMRot_mHtBUP/preview" } }
             ],
             "Plant Arrangement": [
-                { title: { en: "In the Interior (2024)", sr: "У ентеријеру (2024)", fr: "À l'intérieur (2024)" }, img: "https://i.imgur.com/tmxDOKc.png", link: { en: "https://drive.google.com/file/d/1WqpmbFV0pZj66ZgAa-3RV0Q98d7RlOr-/view?usp=drive_link", sr: "https://drive.google.com/file/d/13APWlttcWpLz94JCcnhj8e_MjKIW8jWw/view?usp=drive_link", fr: "https://drive.google.com/file/d/1_TynlW7eMRsaGHSBZ6AUox-2cK0Qp94I/view?usp=drive_link" } },
-                { title: { en: "In the Garden (2023)", sr: "У врту (2023)", fr: "Dans le jardin (2023)" }, img: "https://i.imgur.com/PhYwmWd.png", link: { en: "https://drive.google.com/file/d/1qHZ0Exh5NnZZQkQS-To3UnVYfWsfvnF2/view?usp=drive_link", sr: "https://drive.google.com/file/d/1aki9QTgC7oOwj5PnupYf5uA821zBF_tx/view?usp=drive_link", fr: "https://drive.google.com/file/d/1mB0BV2JYwo9kqQfgFz582Wt3Exc1wG6k/view?usp=drive_link" } },
+                { title: { en: "In the Interior (2024)", sr: "У ентеријеру (2024)", fr: "À l'intérieur (2024)" }, img: "https://i.imgur.com/tmxDOKc.png", link: { en: "https://drive.google.com/file/d/1WqpmbFV0pZj66ZgAa-3RV0Q98d7RlOr-/preview", sr: "https://drive.google.com/file/d/13APWlttcWpLz94JCcnhj8e_MjKIW8jWw/preview", fr: "https://drive.google.com/file/d/1_TynlW7eMRsaGHSBZ6AUox-2cK0Qp94I/preview" } },
+                { title: { en: "In the Garden (2023)", sr: "У врту (2023)", fr: "Dans le jardin (2023)" }, img: "https://i.imgur.com/PhYwmWd.png", link: { en: "https://drive.google.com/file/d/1qHZ0Exh5NnZZQkQS-To3UnVYfWsfvnF2/preview", sr: "https://drive.google.com/file/d/1aki9QTgC7oOwj5PnupYf5uA821zBF_tx/preview", fr: "https://drive.google.com/file/d/1mB0BV2JYwo9kqQfgFz582Wt3Exc1wG6k/preview" } }
             ],
             "Park & Lawn Reconstruction": [
-                { title: { en: "Lawn (2024)", sr: "Травњак (2024)", fr: "Pelouse (2024)" }, img: "https://i.imgur.com/UAKiQo5.png", link: { en: "https://drive.google.com/file/d/14x8LpUY9H8nkI2g-cVbkr2dXbxhOQxYI/view?usp=drive_link", sr: "https://drive.google.com/file/d/1KBI3rHx_DndVqZishAButVRqoGg4I-ZQ/view?usp=drive_link", fr: "https://drive.google.com/file/d/19ldspEWgm4p7zMnSlwh45df3KHbIkLBd/view?usp=drive_link" } },
-                { title: { en: "Local Park (2024)", sr: "Локални парк (2024)", fr: "Parc local (2024)" }, img: "https://i.imgur.com/1poDGcN.jpeg", link: { en: "https://drive.google.com/file/d/1XmurqSfQpf_02y8jer2tE92uf1TZwD8I/view?usp=drive_link", sr: "https://drive.google.com/file/d/1LW682nfocSSdgkTJUkuvFDO__HkmedHZ/view?usp=drive_link", fr: "https://drive.google.com/file/d/1YxZ8ol3Uc1yX-EKqBKKB7_uH6xwcbF7G/view?usp=drive_link" } },
-                { title: { en: "City Park (2024)", sr: "Градски парк (2024)", fr: "Parc urbain (2024)" }, img: "https://i.imgur.com/aZop2vA.png", link: { en: "https://drive.google.com/file/d/1wWktjcqL3c_jGDFPD_zRTdAGqKcuF9SR/view?usp=drive_link", sr: "https://drive.google.com/file/d/1-emv_2naMEIfXuQO5e78ukgVQoXqFAXK/view?usp=drive_link", fr: "https://drive.google.com/file/d/1KmNnfz8baSHfAWxdvoth1_-eB-k6GqkW/view?usp=drive_link" } },
-                { title: { en: "Eco Park (2019)", sr: "Еколошки парк (2019)", fr: "Parc écologique (2019)" }, img: "https://i.imgur.com/EeIU78k.png", link: { en: "https://drive.google.com/file/d/14Ilx6XkcFOF7xisfgnA23uT58Eg-lhAx/view?usp=drive_link", sr: "https://drive.google.com/file/d/1GSdj-MUFwiZURj6rWwEIHpj5TdeQdWcc/view?usp=drive_link", fr: "https://drive.google.com/file/d/1bfgpDHbVUa8voHio1PyGZGBG6p8l_ru4/view?usp=drive_link" } }
+                { title: { en: "Lawn (2024)", sr: "Травњак (2024)", fr: "Pelouse (2024)" }, img: "https://i.imgur.com/UAKiQo5.png", link: { en: "https://drive.google.com/file/d/1WqpmbFV0pZj66ZgAa-3RV0Q98d7RlOr-/preview", sr: "https://drive.google.com/file/d/13APWlttcWpLz94JCcnhj8e_MjKIW8jWw/preview", fr: "https://drive.google.com/file/d/1_TynlW7eMRsaGHSBZ6AUox-2cK0Qp94I/preview" } },
+                { title: { en: "Local Park (2024)", sr: "Локални парк (2024)", fr: "Parc local (2024)" }, img: "https://i.imgur.com/1poDGcN.jpeg", link: { en: "https://drive.google.com/file/d/1XmurqSfQpf_02y8jer2tE92uf1TZwD8I/preview", sr: "https://drive.google.com/file/d/1LW682nfocSSdgkTJUkuvFDO__HkmedHZ/preview", fr: "https://drive.google.com/file/d/1YxZ8ol3Uc1yX-EKqBKKB7_uH6xwcbF7G/preview" } },
+                { title: { en: "City Park (2024)", sr: "Градски парк (2024)", fr: "Parc urbain (2024)" }, img: "https://i.imgur.com/aZop2vA.png", link: { en: "https://drive.google.com/file/d/1wWktjcqL3c_jGDFPD_zRTdAGqKcuF9SR/preview", sr: "https://drive.google.com/file/d/1-emv_2naMEIfXuQO5e78ukgVQoXqFAXK/preview", fr: "https://drive.google.com/file/d/1KmNnfz8baSHfAWxdvoth1_-eB-k6GqkW/preview" } },
+                { title: { en: "Eco Park (2019)", sr: "Еколошки парк (2019)", fr: "Parc écologique (2019)" }, img: "https://i.imgur.com/EeIU78k.png", link: { en: "https://drive.google.com/file/d/14Ilx6XkcFOF7xisfgnA23uT58Eg-lhAx/preview", sr: "https://drive.google.com/file/d/1GSdj-MUFwiZURj6rWwEIHpj5TdeQdWcc/preview", fr: "https://drive.google.com/file/d/1bfgpDHbVUa8voHio1PyGZGBG6p8l_ru4/preview" } }
             ],
             "Research Papers": [
-                { title: { en: "Sustainable Development (2024)", sr: "Одрживи развој (2024)", fr: "Développement durable (2024)" }, img: "https://i.imgur.com/933OBvw.png", link: { en: "https://drive.google.com/file/d/1dt2H-pE8bYhhcVvJmAzT_WyqsCSvrNLn/view?usp=drive_link", sr: "https://drive.google.com/file/d/1Wsl4l_PKCP9Z52r-HP1K4TduSCgPo7dW/view?usp=drive_link", fr: "https://drive.google.com/file/d/1JQd16VwCdyZiNN6arnmkmx_ObWhyJrqS/view?usp=drive_link" } },
-                { title: { en: "Cockchafers (2024)", sr: "Гундељи (2024)", fr: "Hannetons (2024)" }, img: "https://i.imgur.com/ijeMA1F.png", link: { en: "https://drive.google.com/file/d/1dZODfOtv9TPhKKEcXD5MeqP2yU3NI_rx/view?usp=drive_link", sr: "https://drive.google.com/file/d/1iV2Aqd9e1g0z4OOYXahwkuu1TD6voNff/view?usp=drive_link", fr: "https://drive.google.com/file/d/1ZSsuasJFJPTt_8vw0YCwdS6mhL6v4aV9/view?usp=drive_link" } },
-                { title: { en: "Field Teaching Diary: Entomology (2024)", sr: "Дневник теренске наставе: Ентомологија (2024)", fr: "Journal d'enseignement sur le terrain: Entomologie (2024)" }, img: "https://i.imgur.com/Yv3tbhk.png", link: { en: "https://drive.google.com/file/d/1Hpd2y2RVGaw3qTGwO_TTmVS0FTzm5azU/view?usp=drive_link", sr: "https://drive.google.com/file/d/1Ksssjy8qedJPMSX85fN7aAuBvjqwJkuN/view?usp=drive_link", fr: "https://drive.google.com/file/d/14E7wJdUrtakiltLaQoxyqlMoBujjRfTR/view?usp=drive_link" } },
-                { title: { en: "Field Teaching Diary: Practice (2023)", sr: "Дневник теренске наставе: Пракса (2023)", fr: "Journal d'enseignement sur le terrain: Pratique (2023)" }, img: "https://i.imgur.com/hoZ0Tie.png", link: { en: "https://drive.google.com/file/d/1CCIU7FzQNXWkmx0te7SDnBDW2DJ3Kkd3/view?usp=drive_link", sr: "https://drive.google.com/file/d/17kWKYLmNJVE7fVS0d7mDoke6PVCIndNQ/view?usp=drive_link", fr: "https://drive.google.com/file/d/1YgPEQ8oU_bjIpHMgIEusw_l9fYKUsUlU/view?usp=drive_link" } }
+                { title: { en: "Sustainable Development (2024)", sr: "Одрживи развој (2024)", fr: "Développement durable (2024)" }, img: "https://i.imgur.com/933OBvw.png", link: { en: "https://drive.google.com/file/d/1dt2H-pE8bYhhcVvJmAzT_WyqsCSvrNLn/preview", sr: "https://drive.google.com/file/d/1Wsl4l_PKCP9Z52r-HP1K4TduSCgPo7dW/preview", fr: "https://drive.google.com/file/d/1JQd16VwCdyZiNN6arnmkmx_ObWhyJrqS/preview" } },
+                { title: { en: "Cockchafers (2024)", sr: "Гундељи (2024)", fr: "Hannetons (2024)" }, img: "https://i.imgur.com/ijeMA1F.png", link: { en: "https://drive.google.com/file/d/1dZODfOtv9TPhKKEcXD5MeqP2yU3NI_rx/preview", sr: "https://drive.google.com/file/d/1iV2Aqd9e1g0z4OOYXahwkuu1TD6voNff/preview", fr: "https://drive.google.com/file/d/1ZSsuasJFJPTt_8vw0YCwdS6mhL6v4aV9/preview" } },
+                { title: { en: "Field Teaching Diary: Entomology (2024)", sr: "Дневник теренске наставе: Ентомологија (2024)", fr: "Journal d'enseignement sur le terrain: Entomologie (2024)" }, img: "https://i.imgur.com/Yv3tbhk.png", link: { en: "https://drive.google.com/file/d/1Hpd2y2RVGaw3qTGwO_TTmVS0FTzm5azU/preview", sr: "https://drive.google.com/file/d/1Ksssjy8qedJPMSX85fN7aAuBvjqwJkuN/preview", fr: "https://drive.google.com/file/d/14E7wJdUrtakiltLaQoxyqlMoBujjRfTR/preview" } },
+                { title: { en: "Field Teaching Diary: Practice (2023)", sr: "Дневник теренске наставе: Пракса (2023)", fr: "Journal d'enseignement sur le terrain: Pratique (2023)" }, img: "https://i.imgur.com/hoZ0Tie.png", link: { en: "https://drive.google.com/file/d/1CCIU7FzQNXWkmx0te7SDnBDW2DJ3Kkd3/preview", sr: "https://drive.google.com/file/d/17kWKYLmNJVE7fVS0d7mDoke6PVCIndNQ/preview", fr: "https://drive.google.com/file/d/1YgPEQ8oU_bjIpHMgIEusw_l9fYKUsUlU/preview" } }
             ],
             "Private Gardens": [
-                { title: { en: "This Section is Still Under Development", sr: "Овај одељак је још увек у изради", fr: "Cette section est encore en développement" }, img: "https://cdn.dribbble.com/users/26878/screenshots/3829900/49-settings.gif", link: { en: "http://tomic-nikola.github.io/portfolio", sr: "http://tomic-nikola.github.io/portfolio", fr: "http://tomic-nikola.github.io/portfolio" } },
+                { title: { en: "This Section is Still Under Development", sr: "Овај одељак је још увек у изради", fr: "Cette section est encore en développement" }, img: "https://cdn.dribbble.com/users/26878/screenshots/3829900/49-settings.gif", link: { en: "http://tomic-nikola.github.io/portfolio", sr: "http://tomic-nikola.github.io/portfolio", fr: "http://tomic-nikola.github.io/portfolio" } }
             ],
             "Logo Design": [
-                { title: { en: "Muzeion (2024)", sr: "Музеион (2024)", fr: "Muzeion (2024)" }, img: "https://i.imgur.com/q72FmIL.png", link: { en: "https://drive.google.com/file/d/1N3wwB-kTQ_DWNzlT6ZDFTXR0c3XjmsEz/view?usp=drive_link", sr: "https://drive.google.com/file/d/1Ai6W-WjiP1zyOpNKGWQqRw6z5wFpTlkR/view?usp=drive_link", fr: "https://drive.google.com/file/d/1lukm4aEJhO0ooZAE6yzmEAbplCdLCGEN/view?usp=drive_link" } },
-                { title: { en: "Young Neurologists Tournament (2024)", sr: "Турнир младих неуролога (2024)", fr: "Tournoi des jeunes neurologues (2024)" }, img: "https://i.imgur.com/ZQruqRq.png", link: { en: "https://drive.google.com/file/d/1Yt_TJ6nw8sYtzzv3Yr8Ht2CVFzzYiqo0/view?usp=drive_link", sr: "https://drive.google.com/file/d/1xjyTHc_NuiynqFhgiybszpvBBCvFPiS3/view?usp=drive_link", fr: "https://drive.google.com/file/d/1UTdJHf9XTv9n0ZHkcK0dBeSCpin1iirb/view?usp=drive_link" } },
-                { title: { en: "Sava Brandy (2024)", sr: "Сава Ракија (2024)", fr: "Eau-de-vie Sava (2024)" }, img: "https://i.imgur.com/8hcBPdk.png", link: { en: "https://drive.google.com/file/d/1XfKo3qAIyvs2c-fCTXAF7SitgnMgeZ8_/view?usp=drive_link", sr: "https://drive.google.com/file/d/1xSHtos4rbOzb2Ri2bOCEtXd6mVuUaBfw/view?usp=drive_link", fr: "https://drive.google.com/file/d/1E2MiRtCRIBkDWVJFy7XA2ZzTmEtHfECV/view?usp=drive_link" } }
+                { title: { en: "Muzeion (2024)", sr: "Музеион (2024)", fr: "Muzeion (2024)" }, img: "https://i.imgur.com/q72FmIL.png", link: { en: "https://drive.google.com/file/d/1N3wwB-kTQ_DWNzlT6ZDFTXR0c3XjmsEz/preview", sr: "https://drive.google.com/file/d/1Ai6W-WjiP1zyOpNKGWQqRw6z5wFpTlkR/preview", fr: "https://drive.google.com/file/d/1lukm4aEJhO0ooZAE6yzmEAbplCdLCGEN/preview" } },
+                { title: { en: "Young Neurologists Tournament (2024)", sr: "Турнир младих неуролога (2024)", fr: "Tournoi des jeunes neurologues (2024)" }, img: "https://i.imgur.com/ZQruqRq.png", link: { en: "https://drive.google.com/file/d/1Yt_TJ6nw8sYtzzv3Yr8Ht2CVFzzYiqo0/preview", sr: "https://drive.google.com/file/d/1xjyTHc_NuiynqFhgiybszpvBBCvFPiS3/preview", fr: "https://drive.google.com/file/d/1UTdJHf9XTv9n0ZHkcK0dBeSCpin1iirb/preview" } },
+                { title: { en: "Sava Brandy (2024)", sr: "Сава Ракија (2024)", fr: "Eau-de-vie Sava (2024)" }, img: "https://i.imgur.com/8hcBPdk.png", link: { en: "https://drive.google.com/file/d/1XfKo3qAIyvs2c-fCTXAF7SitgnMgeZ8_/preview", sr: "https://drive.google.com/file/d/1xSHtos4rbOzb2Ri2bOCEtXd6mVuUaBfw/preview", fr: "https://drive.google.com/file/d/1E2MiRtCRIBkDWVJFy7XA2ZzTmEtHfECV/preview" } }
             ]
         };
 
@@ -693,12 +908,21 @@
                 const gridItem = document.createElement('div');
                 gridItem.classList.add('grid-item');
                 const link = typeof item.link === 'object' ? item.link[lang] : item.link;
+                const isPrivateGardens = subName === "Private Gardens";
                 gridItem.innerHTML = `
-                    <a href="${link}" target="_blank" style="text-decoration: none; color: inherit;">
+                    <div>
                         <img src="${item.img}" alt="${item.title[lang]}" loading="lazy">
                         <p>${item.title[lang]}</p>
-                    </a>
+                    </div>
                 `;
+                // Add click event to open modal or navigate based on subcategory
+                gridItem.addEventListener('click', () => {
+                    if (isPrivateGardens) {
+                        window.open(link, '_blank');
+                    } else {
+                        openModal(link, item.title[lang]);
+                    }
+                });
                 fragment.appendChild(gridItem);
             });
 
